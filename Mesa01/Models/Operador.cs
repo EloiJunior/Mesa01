@@ -11,6 +11,7 @@ namespace Mesa01.Models
         public DateTime BirthDate { get; set; }
         public double BaseSalary { get; set; }
         public Departamento Departamento { get; set; } //associação de 1 Operador com apenas 1 Departamento
+        public int DepartamentoId { get; set; } //foreign key
 
         //associação de 1 Operador com varios Fechamentos, já instanciando a coleção, para garantir que a lista seja criada
         public ICollection<Fechamento> Fechamentos { get; set; } = new List<Fechamento>(); 

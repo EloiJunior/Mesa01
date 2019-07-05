@@ -11,9 +11,9 @@ namespace Mesa01.Controllers
 {
     public class FechamentosController : Controller
     {
-        private readonly Mesa01Context _context;
+        private readonly Mesa01Context_context _context;
 
-        public FechamentosController(Mesa01Context context)
+        public FechamentosController(Mesa01Context_context context)
         {
             _context = context;
         }

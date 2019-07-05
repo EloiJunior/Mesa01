@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Mesa01.Models;
+using Mesa01.Services;
 
 namespace Mesa01
 {
@@ -36,8 +37,10 @@ namespace Mesa01
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<Mesa01Context>(options =>
+            services.AddDbContext<Mesa01Context_context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Mesa01Context")));
+
+            services.AddScoped<OperadorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

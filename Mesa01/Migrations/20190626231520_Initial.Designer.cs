@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mesa01.Migrations
 {
-    [DbContext(typeof(Mesa01Context))]
+    [DbContext(typeof(Mesa01Context_context))]
     [Migration("20190626231520_Initial")]
     partial class Initial
     {

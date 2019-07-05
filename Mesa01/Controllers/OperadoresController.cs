@@ -11,9 +11,9 @@ namespace Mesa01.Controllers
 {
     public class OperadoresController : Controller
     {
-        private readonly Mesa01Context _context;
+        private readonly Mesa01Context_context _context;
 
-        public OperadoresController(Mesa01Context context)
+        public OperadoresController(Mesa01Context_context context)
         {
             _context = context;
         }

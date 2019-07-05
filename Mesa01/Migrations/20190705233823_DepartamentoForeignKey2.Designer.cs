@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mesa01.Migrations
 {
     [DbContext(typeof(Mesa01Context_context))]
-    [Migration("20190705223950_OtherControllers")]
-    partial class OtherControllers
+    [Migration("20190705233823_DepartamentoForeignKey2")]
+    partial class DepartamentoForeignKey2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,7 +77,7 @@ namespace Mesa01.Migrations
 
                     b.Property<DateTime>("BirthDate");
 
-                    b.Property<int?>("DepartamentoId");
+                    b.Property<int>("DepartamentoId");
 
                     b.Property<string>("Email");
 
@@ -101,7 +101,8 @@ namespace Mesa01.Migrations
                 {
                     b.HasOne("Mesa01.Models.Departamento", "Departamento")
                         .WithMany("Operadores")
-                        .HasForeignKey("DepartamentoId");
+                        .HasForeignKey("DepartamentoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

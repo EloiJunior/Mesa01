@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Mesa01.Models
 {
-    public class Mesa01Context : DbContext
+    public class Mesa01Context_context : DbContext
     {
-        public Mesa01Context (DbContextOptions<Mesa01Context> options)
+        public Mesa01Context_context (DbContextOptions<Mesa01Context_context> options)
             : base(options)
         {
         }

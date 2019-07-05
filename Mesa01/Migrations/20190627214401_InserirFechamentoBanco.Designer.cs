@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mesa01.Migrations
 {
-    [DbContext(typeof(Mesa01Context))]
+    [DbContext(typeof(Mesa01Context_context))]
     [Migration("20190627214401_InserirFechamentoBanco")]
     partial class InserirFechamentoBanco
     {
