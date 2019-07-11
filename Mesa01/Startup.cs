@@ -40,7 +40,8 @@ namespace Mesa01
             services.AddDbContext<Mesa01Context_context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Mesa01Context")));
 
-            services.AddScoped<OperadorService>();
+            services.AddScoped<OperadorService>();      
+            services.AddScoped<DepartamentoService>();  // registrar o DepartamentoService no sistema de injeção de dependencia
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

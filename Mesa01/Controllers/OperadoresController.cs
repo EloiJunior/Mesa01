@@ -6,16 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Mesa01.Models;
+using Mesa01.Models.ViewModels;
+using Mesa01.Services;
 
 namespace Mesa01.Controllers
 {
     public class OperadoresController : Controller
     {
+        private readonly DepartamentoService _departamentoService;
+
         private readonly Mesa01Context_context _context;
 
-        public OperadoresController(Mesa01Context_context context)
+        //construtor que inicialmente foi criado pelo CRUD, inclui o DepartamentoService
+        public OperadoresController(Mesa01Context_context context, DepartamentoService departamentoService) // coloquei o DepartamentoService do serviço criado no construtor
         {
             _context = context;
+
+            _departamentoService = departamentoService; //_departamentoService da classe, recebe departamentoService do argumento
         }
 
         // GET: Operadores
@@ -45,7 +52,9 @@ namespace Mesa01.Controllers
         // GET: Operadores/Create
         public IActionResult Create()
         {
-            return View();
+            var departamentos = _departamentoService.FindAll(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
+            var viewModel = new OperadorFormViewModel { Departamentos = departamentos }; // agora vamos instanciar um objeto do nosso viewModel, no Departamentos vamos iniciar com a lista de departamentos que acabamos de gerar acima
+            return View(viewModel);
         }
 
         // POST: Operadores/Create
@@ -53,7 +62,7 @@ namespace Mesa01.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Email,BirthDate,BaseSalary")] Operador operador)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Email,BirthDate,BaseSalary,DepartamentoId")] Operador operador)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +94,7 @@ namespace Mesa01.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,BirthDate,BaseSalary")] Operador operador)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,BirthDate,BaseSalary,DepartamentoId")] Operador operador)
         {
             if (id != operador.Id)
             {
