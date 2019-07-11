@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Mesa01.Models;
 using Mesa01.Models.ViewModels;
 using Mesa01.Services;
+using Microsoft.EntityFrameworkCore; //biblioteca para usar o comando Include, para fazer um join de 2 tabelas
+
+
 
 namespace Mesa01.Controllers
 {
@@ -40,7 +43,8 @@ namespace Mesa01.Controllers
             }
 
             var operador = await _context.Operador
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(m => m.Departamento).FirstOrDefaultAsync(m => m.Id == id); // Include nesse caso faz um join da tabela Operador com a tabela Departamento, isso é o Eager Loading que é carregar outros objetos associados ao objeto principal
+
             if (operador == null)
             {
                 return NotFound();
