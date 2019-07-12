@@ -12,7 +12,8 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <input type="hidden" asp-for="Operador.Id" /> <!--criamos um campo oculto(hidden) com o Id do Operador-->
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- o framework criou assim com o "ModelOnly" : <div asp-validation-summary="ModelOnly" class="text-danger"></div>  -->
+            <div asp-validation-summary="All" class="text-danger"></div> <!-- e alteramos para "All", para aparecer no sumario da tela-->
             <div class="form-group">
                 <label asp-for="Operador.Nome" class="control-label"></label>
                 <input asp-for="Operador.Nome" class="form-control" />
@@ -52,4 +53,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}  <!-- para que a validação possa acontecer no nivel de JavaScript --> 

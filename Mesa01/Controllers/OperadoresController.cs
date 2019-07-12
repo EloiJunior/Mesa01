@@ -68,13 +68,18 @@ namespace Mesa01.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Email,BirthDate,BaseSalary,DepartamentoId")] Operador operador)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)                       //teste criado para checar se as validações do Model estão atendidas, elas podem vir erradas se as validações não foram feitas a nivel de JavaScript
             {
                 _context.Add(operador);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(operador);
+            //return View(operador);  //foi criado assim pelo framework, porem agora será pelo operadorFormViewModel  //se as validações não foram atendidas não é criado na tabela e devolve com o objeto incompleto sem criar na tabela
+                                                                                //essa situação pode ocorrer se as validações não foram feita a nivel de JavaScript
+             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            var departamentos = _departamentoService.FindAll();
+            var viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
+            return View(viewModel);                      // agora não mais retornando o operador somente, mas o operador e a lista de departamentos, com os erros de validação
         }
 
         // GET: Operadores/Edit/5
@@ -128,7 +133,10 @@ namespace Mesa01.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(operador);
+            //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            var departamentos = _departamentoService.FindAll();
+            var viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
+            return View(viewModel);                                                  // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
         // GET: Operadores/Delete/5
