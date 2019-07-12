@@ -90,7 +90,10 @@ namespace Mesa01.Controllers
             {
                 return NotFound();
             }
-            return View(operador);
+            //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            List<Departamento> departamentos = _departamentoService.FindAll();
+            OperadorFormViewModel viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
+            return View(viewModel); // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
         // POST: Operadores/Edit/5
@@ -102,7 +105,7 @@ namespace Mesa01.Controllers
         {
             if (id != operador.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)
