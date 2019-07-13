@@ -16,14 +16,14 @@ namespace Mesa01.Controllers
 {
     public class OperadoresController : Controller
     {
-        private readonly DepartamentoService _departamentoService;
+        private readonly DepartamentoService _departamentoService;  //injeção de dependencia do DepartamentoService
+        private readonly OperadorService _operadorService;          //injeção de dependencia do OperadorService
+        //private readonly Mesa01Context_context _context;          //criado pelo framework, migrei para o OperadorService
 
-        private readonly Mesa01Context_context _context;
-
-        //construtor que inicialmente foi criado pelo CRUD, inclui o DepartamentoService
-        public OperadoresController(Mesa01Context_context context, DepartamentoService departamentoService) // coloquei o DepartamentoService do serviço criado no construtor
+        //construtor que inicialmente foi criado pelo CRUD, incluimos o DepartamentoService
+        public OperadoresController(/*Mesa01Context_context context,*/ OperadorService operadorService,  DepartamentoService departamentoService) // coloquei o DepartamentoService e o OperadorService do serviço criado no construtor
         {
-            _context = context;
+            _operadorService = operadorService;          //_operadorService da classe, recebe operadorService do argumento
 
             _departamentoService = departamentoService; //_departamentoService da classe, recebe departamentoService do argumento
         }
@@ -31,7 +31,7 @@ namespace Mesa01.Controllers
         // GET: Operadores
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Operador.ToListAsync());
+            return View(await _operadorService.FindAllAsync());
         }
 
         // GET: Operadores/Details/5
@@ -42,8 +42,7 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var operador = await _context.Operador
-                .Include(m => m.Departamento).FirstOrDefaultAsync(m => m.Id == id); // Include nesse caso faz um join da tabela Operador com a tabela Departamento, isso é o Eager Loading que é carregar outros objetos associados ao objeto principal
+            var operador = await _operadorService.FindByIdAsync(id.Value);
 
             if (operador == null)
             {
@@ -54,9 +53,9 @@ namespace Mesa01.Controllers
         }
 
         // GET: Operadores/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departamentos = _departamentoService.FindAll(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
+            var departamentos = await _departamentoService.FindAllAsync(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
             var viewModel = new OperadorFormViewModel { Departamentos = departamentos }; // agora vamos instanciar um objeto do nosso viewModel, no Departamentos vamos iniciar com a lista de departamentos que acabamos de gerar acima
             return View(viewModel);
         }
@@ -70,14 +69,13 @@ namespace Mesa01.Controllers
         {
             if (ModelState.IsValid)                       //teste criado para checar se as validações do Model estão atendidas, elas podem vir erradas se as validações não foram feitas a nivel de JavaScript
             {
-                _context.Add(operador);
-                await _context.SaveChangesAsync();
+                await _operadorService.InsertAsync(operador);
                 return RedirectToAction(nameof(Index));
             }
             //return View(operador);  //foi criado assim pelo framework, porem agora será pelo operadorFormViewModel  //se as validações não foram atendidas não é criado na tabela e devolve com o objeto incompleto sem criar na tabela
                                                                                 //essa situação pode ocorrer se as validações não foram feita a nivel de JavaScript
              //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
-            var departamentos = _departamentoService.FindAll();
+            var departamentos = await _departamentoService.FindAllAsync();
             var viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
             return View(viewModel);                      // agora não mais retornando o operador somente, mas o operador e a lista de departamentos, com os erros de validação
         }
@@ -90,13 +88,13 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var operador = await _context.Operador.FindAsync(id);
+            var operador = await _operadorService.FindByIdAsync(id.Value);
             if (operador == null)
             {
                 return NotFound();
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
-            List<Departamento> departamentos = _departamentoService.FindAll();
+            List<Departamento> departamentos = await _departamentoService.FindAllAsync();
             OperadorFormViewModel viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
             return View(viewModel); // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
@@ -117,12 +115,12 @@ namespace Mesa01.Controllers
             {
                 try
                 {
-                    _context.Update(operador);
-                    await _context.SaveChangesAsync();
+                    await _operadorService.UpdateAsync(operador);
+                   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OperadorExists(operador.Id))
+                    if (!_operadorService.OperadorExists(operador.Id))
                     {
                         return NotFound();
                     }
@@ -134,7 +132,7 @@ namespace Mesa01.Controllers
                 return RedirectToAction(nameof(Index));
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
-            var departamentos = _departamentoService.FindAll();
+            var departamentos = await _departamentoService.FindAllAsync();
             var viewModel = new OperadorFormViewModel { Operador = operador, Departamentos = departamentos };
             return View(viewModel);                                                  // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
@@ -147,8 +145,8 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var operador = await _context.Operador
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var operador = await _operadorService.FindByIdAsync(id.Value);
+                
             if (operador == null)
             {
                 return NotFound();
@@ -162,15 +160,9 @@ namespace Mesa01.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var operador = await _context.Operador.FindAsync(id);
-            _context.Operador.Remove(operador);
-            await _context.SaveChangesAsync();
+            await _operadorService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OperadorExists(int id)
-        {
-            return _context.Operador.Any(e => e.Id == id);
-        }
     }
 }
