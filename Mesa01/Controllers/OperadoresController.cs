@@ -119,7 +119,7 @@ namespace Mesa01.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_operadorService.OperadorExists(operador.Id))
+                    if (!await _operadorService.OperadorExistsAsync(operador.Id))
                     {
                         return NotFound();
                     }

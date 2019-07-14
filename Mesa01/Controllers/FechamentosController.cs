@@ -6,22 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Mesa01.Models;
+using Mesa01.Services;  // para usar as classes de serviços
 
 namespace Mesa01.Controllers
 {
     public class FechamentosController : Controller
     {
-        private readonly Mesa01Context_context _context;
+        //private readonly Mesa01Context_context _context;
+        private readonly FechamentoService _fechamentoService;
 
-        public FechamentosController(Mesa01Context_context context)
+        public FechamentosController(FechamentoService fechamentoService /*Mesa01Context_context context*/)
         {
-            _context = context;
+            _fechamentoService = fechamentoService;
         }
 
         // GET: Fechamentos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Fechamento.ToListAsync());
+            return View(await _fechamentoService.FindAllAsync());
         }
 
         // GET: Fechamentos/Details/5
@@ -32,8 +34,8 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var fechamento = await _context.Fechamento
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var fechamento = await _fechamentoService.FindByIdAsync(id.Value);
+
             if (fechamento == null)
             {
                 return NotFound();
@@ -57,8 +59,8 @@ namespace Mesa01.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(fechamento);
-                await _context.SaveChangesAsync();
+                await _fechamentoService.InsertAsync(fechamento);
+               
                 return RedirectToAction(nameof(Index));
             }
             return View(fechamento);
@@ -72,7 +74,7 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var fechamento = await _context.Fechamento.FindAsync(id);
+            var fechamento = await _fechamentoService.FindByIdAsync(id.Value);
             if (fechamento == null)
             {
                 return NotFound();
@@ -96,12 +98,11 @@ namespace Mesa01.Controllers
             {
                 try
                 {
-                    _context.Update(fechamento);
-                    await _context.SaveChangesAsync();
+                    await _fechamentoService.UpdateAsync(fechamento);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FechamentoExists(fechamento.Id))
+                    if (!await _fechamentoService.FechamentoExistsAsync(fechamento.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +124,8 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var fechamento = await _context.Fechamento
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var fechamento = await _fechamentoService.FindByIdAsync(id.Value);
+
             if (fechamento == null)
             {
                 return NotFound();
@@ -138,15 +139,10 @@ namespace Mesa01.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var fechamento = await _context.Fechamento.FindAsync(id);
-            _context.Fechamento.Remove(fechamento);
-            await _context.SaveChangesAsync();
+            await _fechamentoService.RemoveAsync(id);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FechamentoExists(int id)
-        {
-            return _context.Fechamento.Any(e => e.Id == id);
-        }
     }
 }

@@ -76,9 +76,9 @@ namespace Mesa01.Services
         }
 
         //Metodo Exists
-        public bool OperadorExists(int id)
+        public async Task<bool> OperadorExistsAsync(int id)
         {
-            return _context.Operador.Any(e => e.Id == id);
+            return await _context.Operador.AnyAsync(e => e.Id == id);
         }
 
 
