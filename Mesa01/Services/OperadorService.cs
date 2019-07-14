@@ -68,6 +68,8 @@ namespace Mesa01.Services
             }
         }
 
+
+        //?? criado por acidente tentando escrever o NotImplementedException()??
         private object NotFound()
         {
             throw new NotImplementedException();

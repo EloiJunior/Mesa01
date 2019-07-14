@@ -4,24 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; //biblioteca para usar o comando Include, para fazer um join de 2 tabelas
 using Mesa01.Models;
+using Mesa01.Services;  //para usar o DepartamentoService
 
 namespace Mesa01.Controllers
 {
     public class DepartamentosController : Controller
     {
-        private readonly Mesa01Context_context _context;
+        //private readonly Mesa01Context_context _context; //criado pelo framework, vou migrar para o DepartamentoService
 
-        public DepartamentosController(Mesa01Context_context context)
+        private readonly DepartamentoService _departamentoService;  //injeção de dependencia do DepartamentoService
+
+        public DepartamentosController(/*Mesa01Context_context context*/ DepartamentoService departamentoService)
         {
-            _context = context;
+            _departamentoService = departamentoService;
         }
 
         // GET: Departamentos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departamento.ToListAsync());
+            return View(await _departamentoService.FindAllAsync());
         }
 
         // GET: Departamentos/Details/5
@@ -32,8 +35,8 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departamento = await _departamentoService.FindByIdAsync(id.Value);
+                
             if (departamento == null)
             {
                 return NotFound();
@@ -57,8 +60,8 @@ namespace Mesa01.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(departamento);
-                await _context.SaveChangesAsync();
+                
+                await _departamentoService.InsertAsync(departamento);
                 return RedirectToAction(nameof(Index));
             }
             return View(departamento);
@@ -72,7 +75,7 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento.FindAsync(id);
+            var departamento = await _departamentoService.FindByIdAsync(id.Value);
             if (departamento == null)
             {
                 return NotFound();
@@ -89,19 +92,19 @@ namespace Mesa01.Controllers
         {
             if (id != departamento.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(departamento);
-                    await _context.SaveChangesAsync();
+                    await _departamentoService.UpdateAsync(departamento);
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartamentoExists(departamento.Id))
+                    if (!await _departamentoService.DepartamentoExists(departamento.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +126,8 @@ namespace Mesa01.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departamento = await _departamentoService.FindByIdAsync(id.Value);
+
             if (departamento == null)
             {
                 return NotFound();
@@ -138,15 +141,10 @@ namespace Mesa01.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var departamento = await _context.Departamento.FindAsync(id);
-            _context.Departamento.Remove(departamento);
-            await _context.SaveChangesAsync();
+            await _departamentoService.RemoveAsync(id);
+            
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DepartamentoExists(int id)
-        {
-            return _context.Departamento.Any(e => e.Id == id);
-        }
     }
 }
