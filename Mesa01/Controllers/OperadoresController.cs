@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore; //biblioteca para usar o comando Include, p
 using Mesa01.Models;
 using Mesa01.Models.ViewModels;
 using Mesa01.Services;
-
-
+using Mesa01.Services.Exceptions;  //para usar o NotFoundException
+using System.Diagnostics;  //para usar o Activity
 
 namespace Mesa01.Controllers
 {
@@ -38,14 +38,17 @@ namespace Mesa01.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
+
 
             var operador = await _operadorService.FindByIdAsync(id.Value);
 
             if (operador == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(operador);
@@ -80,17 +83,20 @@ namespace Mesa01.Controllers
         }
 
         // GET: Operadores/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id) //esse opcional "?" foi colocado somente para evitar erro de execução, na verdade o id é obrigatorio
         {
             if (id == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var operador = await _operadorService.FindByIdAsync(id.Value);
+            var operador = await _operadorService.FindByIdAsync(id.Value); //essa variavel operador, vai ser usada no OperadorFormViewModel abaixo:
+
             if (operador == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
             List<Departamento> departamentos = await _departamentoService.FindAllAsync();
@@ -107,7 +113,8 @@ namespace Mesa01.Controllers
         {
             if (id != operador.Id)
             {
-                return BadRequest();
+                //return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
 
             if (ModelState.IsValid)
@@ -117,15 +124,17 @@ namespace Mesa01.Controllers
                     await _operadorService.UpdateAsync(operador);
                    
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (ApplicationException e)
                 {
                     if (!await _operadorService.OperadorExistsAsync(operador.Id))
                     {
-                        return NotFound();
+                        //return NotFound();
+                        return RedirectToAction(nameof(Error), new { message = "Id not found" });
                     }
                     else
                     {
-                        throw;
+                        //throw new DbConcurrencyException(e.Message);
+                        return RedirectToAction(nameof(Error), new { message = e.Message });
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -141,14 +150,16 @@ namespace Mesa01.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                // return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var operador = await _operadorService.FindByIdAsync(id.Value);
                 
             if (operador == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(operador);
@@ -161,6 +172,23 @@ namespace Mesa01.Controllers
         {
             await _operadorService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        //Ação para pegar o Erro e devolver o Erro personalizado para a View
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+
+                //Macete do framework para pegar o id interno da requisição
+                //        Current opcional "?"   
+                //se for nulo vamos usar o operador de coalescencia nula "??"
+                //e vamos dizer então que queremos no lugar o objeto Http...:
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
 
     }

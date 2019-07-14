@@ -1,4 +1,5 @@
 ﻿using Mesa01.Models;
+using Mesa01.Services.Exceptions;     //para usar o NotFoundException que criamos em serviços
 using Microsoft.EntityFrameworkCore;  // para usar o .ToListAsync()
 using System;
 using System.Collections.Generic;
@@ -55,17 +56,20 @@ namespace Mesa01.Services
         {
             if (!await _context.Operador.AnyAsync(x => x.Id == operador.Id))
             {
-                throw new NotImplementedException();
+                throw new NotFoundException("Id not found");
             }
-            try
+            try //nesse bloco vamos tentar realizar o update na tabela
             {
                 _context.Update(operador);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException )
+            catch (DbUpdateConcurrencyException e)    //se ocorrer uma exceção de concorrencia a nivel de acesso a bco de dados, vamos pegar esse erro
             {
-                throw new NotImplementedException();
+                throw new DbConcurrencyException(e.Message); //e vamos apresentar a nivel de serviço a mensagem personalizada, ou nesse caso a propria mensagem que o framework trouxe
             }
+
+
+
         }
 
 
