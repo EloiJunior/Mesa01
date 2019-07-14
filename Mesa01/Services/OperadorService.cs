@@ -46,10 +46,19 @@ namespace Mesa01.Services
         //Metodo Remove
         public async Task RemoveAsync(int id)
         {
-            var operador =  await _context.Operador.FindAsync(id);
-            _context.Operador.Remove(operador);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var operador = await _context.Operador.FindAsync(id);
+                _context.Operador.Remove(operador);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbConcurrencyException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
+
         }
+
 
         //Metodo Update
         public async Task UpdateAsync(Operador operador)
