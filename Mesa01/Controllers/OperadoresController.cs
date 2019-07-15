@@ -32,6 +32,8 @@ namespace Mesa01.Controllers
         {
             return View(await _operadorService.FindAllAsync());
         }
+        
+
 
         // GET: Operadores/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -53,6 +55,7 @@ namespace Mesa01.Controllers
 
             return View(operador);
         }
+        
 
         // GET: Operadores/Create
         public async Task<IActionResult> Create()
