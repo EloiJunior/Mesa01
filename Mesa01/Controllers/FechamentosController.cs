@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Mesa01.Models;
 using Mesa01.Services;  // para usar as classes de serviços
+using Mesa01.Models.ViewModels;
+using System.Diagnostics;  //para usar o Activity do erro
 
 namespace Mesa01.Controllers
 {
@@ -14,10 +16,14 @@ namespace Mesa01.Controllers
     {
         //private readonly Mesa01Context_context _context;
         private readonly FechamentoService _fechamentoService;
+        private readonly DepartamentoService _departamentoService;  //injeção de dependencia do DepartamentoService
+        private readonly OperadorService _operadorService;          //injeção de dependencia do OperadorService
 
-        public FechamentosController(FechamentoService fechamentoService /*Mesa01Context_context context*/)
+        public FechamentosController(FechamentoService fechamentoService, DepartamentoService departamentoService, OperadorService operadorService)
         {
             _fechamentoService = fechamentoService;
+            _departamentoService = departamentoService;
+            _operadorService = operadorService;
         }
 
         // GET: Fechamentos
@@ -45,9 +51,12 @@ namespace Mesa01.Controllers
         }
 
         // GET: Fechamentos/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var operadores = await _operadorService.FindAllAsync(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
+            var viewModel = new FechamentoFormViewModel { Operadores = operadores }; // agora vamos instanciar um objeto do nosso viewModel, no Departamentos vamos iniciar com a lista de departamentos que acabamos de gerar acima
+            return View(viewModel);
+            //return View();
         }
 
         // POST: Fechamentos/Create
@@ -55,7 +64,7 @@ namespace Mesa01.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tipo,Operador,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco")] Fechamento fechamento)
+        public async Task<IActionResult> Create([Bind("Id,Tipo,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco,OperadorId,Status")] Fechamento fechamento)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +72,14 @@ namespace Mesa01.Controllers
                
                 return RedirectToAction(nameof(Index));
             }
-            return View(fechamento);
+
+            //return View(fechamento);  //foi criado assim pelo framework, porem agora será pelo FechamentoFormViewModel  //se as validações não foram atendidas não é criado na tabela e devolve com o objeto incompleto sem criar na tabela
+            //essa situação pode ocorrer se as validações não foram feita a nivel de JavaScript
+            //criei a lista de departamentos e atraves da ViewModel FechamentoFormViewModel, consigo apresentar na tela de edição o combo de Operadores para a edição do operador
+            var operadores = await _operadorService.FindAllAsync();
+            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores};
+            return View(viewModel);                      // agora não mais retornando o operador somente, mas o operador e a lista de departamentos, com os erros de validação
+
         }
 
         // GET: Fechamentos/Edit/5
@@ -79,7 +95,10 @@ namespace Mesa01.Controllers
             {
                 return NotFound();
             }
-            return View(fechamento);
+            //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            List<Operador> operadores = await _operadorService.FindAllAsync();
+            FechamentoFormViewModel viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores };
+            return View(viewModel); // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
         // POST: Fechamentos/Edit/5
@@ -113,7 +132,10 @@ namespace Mesa01.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(fechamento);
+            //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            var operadores = await _operadorService.FindAllAsync();
+            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento  ,Operadores = operadores };
+            return View(viewModel);                                                  // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
         // GET: Fechamentos/Delete/5
@@ -139,10 +161,36 @@ namespace Mesa01.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _fechamentoService.RemoveAsync(id);
+            try
+            {
+                await _fechamentoService.RemoveAsync(id);
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ApplicationException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+
         }
+
+        //Ação para pegar o Erro e devolver o Erro personalizado para a View
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+
+                //Macete do framework para pegar o id interno da requisição
+                //        Current opcional "?"   
+                //se for nulo vamos usar o operador de coalescencia nula "??"
+                //e vamos dizer então que queremos no lugar o objeto Http...:
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
+        }
+
 
     }
 }

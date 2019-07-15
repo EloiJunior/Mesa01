@@ -41,9 +41,20 @@ namespace Mesa01.Controllers
         }
 
 
-        public IActionResult GroupingSearch()
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            if (!minDate.HasValue)  //para aparecer o inicio do ano no filtro de seleçao da tela, qdo não for preenchido manualmente
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            if (!maxDate.HasValue)  //para aparecer a data atual no filtro de seleção da tela, qdo não for preenchido manualmente
+            {
+                maxDate = DateTime.Now;
+            }
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");  //para aparecer no filtro a data minima
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");  //para aparecer no filtro a data maxima
+            var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
+            return View(result);
         }
 
     }

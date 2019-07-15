@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic; //para usar o ICollection
 
 
 namespace Mesa01.Models.ViewModels

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mesa01.Models;
+using Mesa01.Services.Exceptions;     // para usar as exceções personalizadas
 using Microsoft.EntityFrameworkCore;  // para usar o .ToListAsync()
 
 namespace Mesa01.Services
@@ -22,7 +23,7 @@ namespace Mesa01.Services
         //Metodo FindAll
         public async Task<List<Fechamento>> FindAllAsync()
         {
-            return await _context.Fechamento.ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a Operadores e me retornar em forma de lista
+            return await _context.Fechamento.ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a fechamento e me retornar em forma de lista
         }
 
         //Metodo Insert
@@ -36,15 +37,23 @@ namespace Mesa01.Services
         public async Task<Fechamento> FindByIdAsync(int id)
         {
             return await _context.Fechamento
-                .FirstOrDefaultAsync(m => m.Id == id); 
+                 .Include(m => m.Operador).FirstOrDefaultAsync(m => m.Id == id); 
         }
 
         //Metodo Remove
         public async Task RemoveAsync(int id)
         {
-            var fechamento = await _context.Fechamento.FindAsync(id);
-            _context.Fechamento.Remove(fechamento);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var fechamento = await _context.Fechamento.FindAsync(id);
+                _context.Fechamento.Remove(fechamento);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbConcurrencyException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
+
         }
 
         //Metodo Update

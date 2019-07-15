@@ -2,6 +2,7 @@
 using System.Collections.Generic; //para usar um ICollection, que é uma coleção de Lista etc...
 using System.ComponentModel.DataAnnotations; //para usar o [Display] ou [DataType] ou [DisplayFormat], que é uma tag (anotação) de anotação personalizada, usada para difinir como aparecerá na tela do usuario
 using System.Linq;                //para usar os codigos linq e as expressões lambda
+
 namespace Mesa01.Models
 {
     public class Operador

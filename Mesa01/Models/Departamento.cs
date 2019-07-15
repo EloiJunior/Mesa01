@@ -1,6 +1,7 @@
 ﻿using System;                       //para ter o DateTime
 using System.Collections.Generic; //para usar o ICollection que é uma coleção, de lista etc..
 using System.Linq;                // para usar o codigo linq e expressões lambda
+
 namespace Mesa01.Models
 {
     public class Departamento

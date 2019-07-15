@@ -21,11 +21,11 @@ namespace Mesa01.Services
             _context = context;
         }
 
-        // GET: Operadores
+        //Metodo FindAll
         //agora que temos a nossa dependencia do context, vamos criar uma operação FindAll para retornar uma lista com todos os operadores do banco de dados
         public async Task<List<Operador>> FindAllAsync()
         {
-            return await _context.Operador.ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a Operadores e me retornar em forma de lista
+            return await _context.Operador.OrderBy(x => x.Nome).ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a Operadores e me retornar em forma de lista
         }
 
 

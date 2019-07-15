@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;  //para usar as anotações de Formatos
 using Mesa01.Models.Enums; // para usar o SaleStatus que é um Enum
 
 
@@ -8,10 +9,18 @@ namespace Mesa01.Models
     {
         public int Id { get; set; }            //atributo basico
         public string Tipo { get; set; }       //atributo basico
+
         public Operador Operador { get; set; } //associação de 1 Fechamento para 1 Operador
+        public int OperadorId { get; set; }  //foreign Key
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Data { get; set; }     //atributo basico
+
         public string Empresa { get; set; }    //atributo basico
+
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         public double Valor { get; set; }      //atributo basico
+
         public double Taxa { get; set; }       //atributo basico
         public double Despesa { get; set; }    //atributo basico
         public int Fluxo { get; set; }         //atributo basico
