@@ -16,7 +16,7 @@ namespace Mesa01.Models
         public DbSet<Mesa01.Models.Departamento> Departamento { get; set; }
         public DbSet<Mesa01.Models.Fechamento> Fechamento { get; set; }
         public DbSet<Mesa01.Models.Operador> Operador { get; set; }
-
+        public DbSet<Mesa01.Models.Tipo> Tipo { get; set; }
 
     }
 }

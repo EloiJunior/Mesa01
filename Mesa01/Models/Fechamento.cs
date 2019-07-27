@@ -10,7 +10,11 @@ namespace Mesa01.Models
         public int Id { get; set; }            //atributo basico
 
         [Required(ErrorMessage = "{0} required")]   //como opção podemos automatizar alguns strings da mensagem de erro
-        public string Tipo { get; set; }       //atributo basico
+        public string Tipo { get; set; }       //atributo basico //associação de 1 fechamento para 1 operador
+
+        [Required(ErrorMessage = "{0} required")]  //como opção podemos automatizar alguns strings da mensagem de erro
+        [Display(Name = "Tipo")]            //tag usada para personalizar como o atributo aparecerá no display, que é a tela do site
+        public int TipoId { get; set; } //foreign Key
 
         public Operador Operador { get; set; } //associação de 1 Fechamento para 1 Operador
 

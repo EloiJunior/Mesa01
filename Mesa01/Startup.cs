@@ -46,6 +46,8 @@ namespace Mesa01
             services.AddScoped<DepartamentoService>();  // registrar o DepartamentoService no sistema de injeção de dependencia
             services.AddScoped<FechamentoService>();
             services.AddScoped<SalesRecordService>();
+            services.AddScoped<TipoService>(); // registrar o DepartamentoService no sistema de injeção de dependencia
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
