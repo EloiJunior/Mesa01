@@ -37,7 +37,7 @@ namespace Mesa01.Services
         public async Task<Fechamento> FindByIdAsync(int id)
         {
             return await _context.Fechamento
-                 .Include(m => m.Operador).FirstOrDefaultAsync(m => m.Id == id); 
+                 .Include(m => m.Operador).Include(m => m.Tipo).FirstOrDefaultAsync(m => m.Id == id); //ponto de atenção pelo segundo include
         }
 
         //Metodo Remove

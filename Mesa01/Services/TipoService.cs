@@ -29,14 +29,16 @@ namespace Mesa01.Services
             return await _context.Tipo.OrderBy(x => x.Nome).ToListAsync(); //OrderBy = ordenar, linq(s => x.Nome) = ordenar pelo nome
         }
 
+        //Metodo FindById
         public async Task<Tipo> FindByIdAsync(int id)
         {
             return await _context.Tipo.FirstOrDefaultAsync(m => m.Id == id);
         }
 
+        //Metodo Insert
         public async Task InsertAsync(Tipo tipo)
         {
-            _context.Tipo.Add(tipo);
+            _context.Add(tipo);
             await _context.SaveChangesAsync();
         }
 
@@ -63,8 +65,8 @@ namespace Mesa01.Services
         //Metodo Remove
         public async Task RemoveAsync(int id)
         {
-            var operador = await _context.Tipo.FindAsync(id);
-            _context.Tipo.Remove(operador);
+            var tipo = await _context.Tipo.FindAsync(id);
+            _context.Tipo.Remove(tipo);
             await _context.SaveChangesAsync();
         }
 

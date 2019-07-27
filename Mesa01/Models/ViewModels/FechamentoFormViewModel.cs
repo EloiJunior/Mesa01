@@ -6,5 +6,6 @@ namespace Mesa01.Models.ViewModels
     {
         public Fechamento Fechamento { get; set; }
         public ICollection<Operador> Operadores { get; set; }
+        public ICollection<Tipo> Tipos { get; set; }
     }
 }

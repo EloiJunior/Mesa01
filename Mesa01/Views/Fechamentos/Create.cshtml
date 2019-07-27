@@ -13,9 +13,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Fechamento.Tipo" class="control-label"></label>
-                <input asp-for="Fechamento.Tipo" class="form-control" />
-                <span asp-validation-for="Fechamento.Tipo" class="text-danger"></span>
+                <label asp-for="Fechamento.TipoId" class="control-label"></label>
+                <select asp-for="Fechamento.TipoId" asp-items="@(new SelectList(Model.Tipos,"Id","Nome"))" class="form-control"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Fechamento.OperadorId" class="control-label"></label>

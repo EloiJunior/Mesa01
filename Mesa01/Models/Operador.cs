@@ -36,8 +36,9 @@ namespace Mesa01.Models
         public Departamento Departamento { get; set; } //associação de 1 Operador com apenas 1 Departamento
         public int DepartamentoId { get; set; } //foreign key
 
-        public Tipo Tipo { get; set; } //associação de 1 Operador com apenas 1 Departamento
-        public int TipoId { get; set; } //foreign key
+        //tirei a associação pois não quero associar o operador ao departamento de origem da operação que é o Tipo
+        //public Tipo Tipo { get; set; } //associação de 1 Operador com apenas 1 Departamento
+       // public int TipoId { get; set; } //foreign key
 
 
         //associação de 1 Operador com varios Fechamentos, já instanciando a coleção, para garantir que a lista seja criada
@@ -49,7 +50,7 @@ namespace Mesa01.Models
         }
 
         //construtor com argumento
-        public Operador(int id, string nome, string email, DateTime birthDate, double baseSalary, Departamento departamento, Tipo tipo)
+        public Operador(int id, string nome, string email, DateTime birthDate, double baseSalary, Departamento departamento)//Tipo tipo//
         {
             Id = id;
             Nome = nome;
@@ -57,7 +58,7 @@ namespace Mesa01.Models
             BirthDate = birthDate;
             BaseSalary = baseSalary;
             Departamento = departamento;
-            Tipo = tipo;
+            //Tipo = tipo;
         }
 
         //operação para adicionar um fechamento na minha lista Fechamentos

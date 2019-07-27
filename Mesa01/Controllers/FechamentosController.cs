@@ -18,18 +18,21 @@ namespace Mesa01.Controllers
         private readonly FechamentoService _fechamentoService;
         private readonly DepartamentoService _departamentoService;  //injeção de dependencia do DepartamentoService
         private readonly OperadorService _operadorService;          //injeção de dependencia do OperadorService
+        private readonly TipoService _tipoService;
+        
 
-        public FechamentosController(FechamentoService fechamentoService, DepartamentoService departamentoService, OperadorService operadorService)
+        public FechamentosController(FechamentoService fechamentoService, DepartamentoService departamentoService, OperadorService operadorService, TipoService tipoService)
         {
             _fechamentoService = fechamentoService;
             _departamentoService = departamentoService;
             _operadorService = operadorService;
+            _tipoService = tipoService;
         }
 
         // GET: Fechamentos
         public async Task<IActionResult> Index()
         {
-            return View(await _fechamentoService.FindAllAsync());
+           return View(await _fechamentoService.FindAllAsync());
         }
 
         // GET: Fechamentos/Details/5
@@ -54,7 +57,8 @@ namespace Mesa01.Controllers
         public async Task<IActionResult> Create()
         {
             var operadores = await _operadorService.FindAllAsync(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
-            var viewModel = new FechamentoFormViewModel { Operadores = operadores }; // agora vamos instanciar um objeto do nosso viewModel, no Departamentos vamos iniciar com a lista de departamentos que acabamos de gerar acima
+            var tipos = await _tipoService.FindAllAsync(); //criei uma variavel que através do serviço DepartamentoService, busca no banco de dados todos os departamentos
+            var viewModel = new FechamentoFormViewModel { Operadores = operadores , Tipos = tipos }; // agora vamos instanciar um objeto do nosso viewModel, no Departamentos vamos iniciar com a lista de departamentos que acabamos de gerar acima
             return View(viewModel);
             //return View();
         }
@@ -64,7 +68,7 @@ namespace Mesa01.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tipo,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco,OperadorId,Status")] Fechamento fechamento)
+        public async Task<IActionResult> Create([Bind("Id,TipoId,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco,OperadorId,Status")] Fechamento fechamento)
         {
             if (ModelState.IsValid)
             {
@@ -77,11 +81,13 @@ namespace Mesa01.Controllers
             //essa situação pode ocorrer se as validações não foram feita a nivel de JavaScript
             //criei a lista de departamentos e atraves da ViewModel FechamentoFormViewModel, consigo apresentar na tela de edição o combo de Operadores para a edição do operador
             var operadores = await _operadorService.FindAllAsync();
-            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores};
-            return View(viewModel);                      // agora não mais retornando o operador somente, mas o operador e a lista de departamentos, com os erros de validação
+            var tipos = await _tipoService.FindAllAsync(); 
+            var viewModel = new FechamentoFormViewModel { Operadores = operadores, Tipos = tipos }; 
+            return View(viewModel);
+            // agora não mais retornando o operador somente, mas o operador e a lista de departamentos, com os erros de validação
 
         }
-
+        
         // GET: Fechamentos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -97,7 +103,8 @@ namespace Mesa01.Controllers
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
             List<Operador> operadores = await _operadorService.FindAllAsync();
-            FechamentoFormViewModel viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores };
+            List<Tipo> tipos = await _tipoService.FindAllAsync();
+            FechamentoFormViewModel viewModel = new FechamentoFormViewModel { Operadores = operadores , Tipos = tipos };
             return View(viewModel); // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
@@ -134,7 +141,8 @@ namespace Mesa01.Controllers
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
             var operadores = await _operadorService.FindAllAsync();
-            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento  ,Operadores = operadores };
+            var tipos = await _tipoService.FindAllAsync();
+            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento  ,Operadores = operadores, Tipos = tipos };
             return View(viewModel);                                                  // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 

@@ -9,12 +9,11 @@ namespace Mesa01.Models
     {
         public int Id { get; set; }            //atributo basico
 
-        [Required(ErrorMessage = "{0} required")]   //como opção podemos automatizar alguns strings da mensagem de erro
-        public string Tipo { get; set; }       //atributo basico //associação de 1 fechamento para 1 operador
+        public Tipo Tipo { get; set; }       //atributo basico //associação de 1 fechamento para 1 Tipo
 
         [Required(ErrorMessage = "{0} required")]  //como opção podemos automatizar alguns strings da mensagem de erro
         [Display(Name = "Tipo")]            //tag usada para personalizar como o atributo aparecerá no display, que é a tela do site
-        public int TipoId { get; set; } //foreign Key
+        public int TipoId { get; set; } //foreign Key 
 
         public Operador Operador { get; set; } //associação de 1 Fechamento para 1 Operador
 
@@ -57,7 +56,7 @@ namespace Mesa01.Models
         }
 
         //Construtor com argumento
-        public Fechamento(int id, string tipo, Operador operador, DateTime data, string empresa, double valor, double taxa, double despesa, int fluxo, string banco, SaleStatus status)
+        public Fechamento(int id, Tipo tipo, Operador operador, DateTime data, string empresa, double valor, double taxa, double despesa, int fluxo, string banco, SaleStatus status)
         {
             Id = id;
             Tipo = tipo;

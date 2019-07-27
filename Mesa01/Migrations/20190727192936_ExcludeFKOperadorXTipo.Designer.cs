@@ -4,14 +4,16 @@ using Mesa01.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mesa01.Migrations
 {
     [DbContext(typeof(Mesa01Context_context))]
-    partial class Mesa01ContextModelSnapshot : ModelSnapshot
+    [Migration("20190727192936_ExcludeFKOperadorXTipo")]
+    partial class ExcludeFKOperadorXTipo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +69,6 @@ namespace Mesa01.Migrations
 
                     b.HasIndex("OperadorId");
 
-                    b.HasIndex("TipoId");
-
                     b.ToTable("Fechamento");
                 });
 
@@ -116,11 +116,6 @@ namespace Mesa01.Migrations
                     b.HasOne("Mesa01.Models.Operador", "Operador")
                         .WithMany("Fechamentos")
                         .HasForeignKey("OperadorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Mesa01.Models.Tipo")
-                        .WithMany("Fechamentos")
-                        .HasForeignKey("TipoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

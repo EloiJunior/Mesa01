@@ -15,7 +15,7 @@ namespace Mesa01.Controllers
         //private readonly Mesa01Context_context _context; //criado pelo framework, vou migrar para o TipoService
         private readonly TipoService _tipoService;  //injeção de dependencia do TipoService
 
-        //construtor??
+        //construtor
         public TiposController(/*Mesa01Context_context context*/ TipoService tipoService)
         {
             _tipoService = tipoService;
