@@ -23,7 +23,8 @@ namespace Mesa01.Services
         //Metodo FindAll
         public async Task<List<Fechamento>> FindAllAsync()
         {
-            return await _context.Fechamento.ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a fechamento e me retornar em forma de lista
+            //o include foi usado para incluir o nome do operador e o nome do Tipo na lista da tabela de fechamento, a partir do TipoId e OperadorId
+            return await _context.Fechamento.Include(m => m.Operador).Include(m => m.Tipo).ToListAsync();  //isso vai acessar a minha tabela de dados relacionada a fechamento e me retornar em forma de lista
         }
 
         //Metodo Insert

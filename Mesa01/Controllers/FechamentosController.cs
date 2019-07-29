@@ -32,7 +32,17 @@ namespace Mesa01.Controllers
         // GET: Fechamentos
         public async Task<IActionResult> Index()
         {
-           return View(await _fechamentoService.FindAllAsync());
+            var list = await _fechamentoService.FindAllAsync();
+
+
+            /*Metodo para inserir na list o nome do operador e o nome do tipo atraves dos Ids, Esse metodo não é feito pelo entitie framework, mas é melhor usar o Include no FechamentoService
+            foreach(var x in list)
+            {
+                x.Operador = await _operadorService.FindByIdAsync(x.OperadorId);
+                x.Tipo = await _tipoService.FindByIdAsync(x.TipoId);
+            }
+            */
+           return View(list);
         }
 
         // GET: Fechamentos/Details/5
