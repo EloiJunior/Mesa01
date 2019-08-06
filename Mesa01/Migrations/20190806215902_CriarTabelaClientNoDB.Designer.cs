@@ -4,14 +4,16 @@ using Mesa01.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mesa01.Migrations
 {
     [DbContext(typeof(Mesa01Context_context))]
-    partial class Mesa01ContextModelSnapshot : ModelSnapshot
+    [Migration("20190806215902_CriarTabelaClientNoDB")]
+    partial class CriarTabelaClientNoDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -4,45 +4,22 @@ using Mesa01.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mesa01.Migrations
 {
     [DbContext(typeof(Mesa01Context_context))]
-    partial class Mesa01ContextModelSnapshot : ModelSnapshot
+    [Migration("20190802154540_CriandoTabelaCliente")]
+    partial class CriandoTabelaCliente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Mesa01.Models.Client", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("BirthDate")
-                        .IsRequired();
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(60);
-
-                    b.Property<int>("RegistroNacional");
-
-                    b.Property<int>("TipoRegistroNacional");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Client");
-                });
 
             modelBuilder.Entity("Mesa01.Models.Departamento", b =>
                 {
@@ -66,8 +43,6 @@ namespace Mesa01.Migrations
                     b.Property<string>("Banco")
                         .IsRequired();
 
-                    b.Property<int?>("ClientId");
-
                     b.Property<DateTime>("Data");
 
                     b.Property<double>("Despesa");
@@ -88,8 +63,6 @@ namespace Mesa01.Migrations
                     b.Property<double>("Valor");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("OperadorId");
 
@@ -139,10 +112,6 @@ namespace Mesa01.Migrations
 
             modelBuilder.Entity("Mesa01.Models.Fechamento", b =>
                 {
-                    b.HasOne("Mesa01.Models.Client")
-                        .WithMany("Fechamentos")
-                        .HasForeignKey("ClientId");
-
                     b.HasOne("Mesa01.Models.Operador")
                         .WithMany("Fechamentos")
                         .HasForeignKey("OperadorId")

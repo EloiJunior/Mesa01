@@ -7,6 +7,17 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190727181841_AddTipoEntitie.cs" />
     <Compile Remove="Migrations\20190727181841_AddTipoEntitie.Designer.cs" />
+    <Compile Remove="Migrations\20190801224630_CriandoTabelaClientes.cs" />
+    <Compile Remove="Migrations\20190801224630_CriandoTabelaClientes.Designer.cs" />
+    <Compile Remove="Migrations\20190801231314_CriandoTabelaCliente.cs" />
+    <Compile Remove="Migrations\20190801231314_CriandoTabelaCliente.Designer.cs" />
+    <Compile Remove="Migrations\20190802191713_CriandoTabelaCliente4.cs" />
+    <Compile Remove="Migrations\20190802191713_CriandoTabelaCliente4.Designer.cs" />
+    <Compile Remove="Migrations\20190802192046_CriandoTabelaCliente5.cs" />
+    <Compile Remove="Migrations\20190802192046_CriandoTabelaCliente5.Designer.cs" />
+    <Compile Remove="Migrations\20190802194542_CriandoTabelaClient.cs" />
+    <Compile Remove="Migrations\20190802194542_CriandoTabelaClient.Designer.cs" />
+    <Compile Remove="Models\Cliente.cs" />
     <Compile Remove="Models\Enums\SalesStatus.cs" />
   </ItemGroup>
 

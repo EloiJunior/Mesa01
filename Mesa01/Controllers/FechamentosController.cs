@@ -114,7 +114,7 @@ namespace Mesa01.Controllers
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
             List<Operador> operadores = await _operadorService.FindAllAsync();
             List<Tipo> tipos = await _tipoService.FindAllAsync();
-            FechamentoFormViewModel viewModel = new FechamentoFormViewModel { Operadores = operadores , Tipos = tipos };
+            FechamentoFormViewModel viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores , Tipos = tipos };
             return View(viewModel); // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
@@ -123,7 +123,7 @@ namespace Mesa01.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tipo,Operador,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco")] Fechamento fechamento)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TipoId,OperadorId,Data,Empresa,Valor,Taxa,Despesa,Fluxo,Banco")] Fechamento fechamento)
         {
             if (id != fechamento.Id)
             {
@@ -150,9 +150,10 @@ namespace Mesa01.Controllers
                 return RedirectToAction(nameof(Index));
             }
             //criei a lista de departamentos e atraves da ViewModel OperadorFormViewModel, consigo apresentar na tela de edição o combo de departamentos para a edição do operador
+            
             var operadores = await _operadorService.FindAllAsync();
             var tipos = await _tipoService.FindAllAsync();
-            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento  ,Operadores = operadores, Tipos = tipos };
+            var viewModel = new FechamentoFormViewModel { Fechamento = fechamento, Operadores = operadores, Tipos = tipos };
             return View(viewModel);                                                  // agora não mais retornando o operador somente, mas o operador e a lista de departamentos
         }
 
