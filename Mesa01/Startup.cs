@@ -45,7 +45,7 @@ namespace Mesa01
             services.AddScoped<OperadorService>();      
             services.AddScoped<DepartamentoService>();  // registrar o DepartamentoService no sistema de injeção de dependencia
             services.AddScoped<FechamentoService>();
-            services.AddScoped<SalesRecordService>();
+            services.AddScoped<SalesRecordService>(); // registrar o DepartamentoService no sistema de injeção de dependencia
             services.AddScoped<TipoService>(); // registrar o DepartamentoService no sistema de injeção de dependencia
 
         }
