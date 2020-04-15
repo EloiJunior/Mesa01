@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;  //para usar as anotações de Formatos
+using System.ComponentModel.DataAnnotations.Schema;//para usar a tag NotMapped, que serve para não criar a coluna na tabela, vou testar ainda
 using Mesa01.Models.Enums; // para usar o SaleStatus que é um Enum
 
 
@@ -9,17 +10,20 @@ namespace Mesa01.Models
     {
         public int Id { get; set; }            //atributo basico
 
+        [NotMapped]
         public Tipo Tipo { get; set; }       //atributo basico //associação de 1 fechamento para 1 Tipo
 
         [Required(ErrorMessage = "{0} required")]  //como opção podemos automatizar alguns strings da mensagem de erro
         [Display(Name = "Tipo")]            //tag usada para personalizar como o atributo aparecerá no display, que é a tela do site
         public int TipoId { get; set; } //foreign Key 
 
+        [NotMapped]
         public Operador Operador { get; set; } //associação de 1 Fechamento para 1 Operador
 
         [Required(ErrorMessage = "{0} required")]  //como opção podemos automatizar alguns strings da mensagem de erro
         [Display(Name ="Operador")]            //tag usada para personalizar como o atributo aparecerá no display, que é a tela do site
         public int OperadorId { get; set; }  //foreign Key
+
 
         [DataType(DataType.Date)]                             // anotation usada para personalizar como aparecerá os dados na tela
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]  //anotation usada para configurar a data como dia, mes e ano.
@@ -56,11 +60,11 @@ namespace Mesa01.Models
         }
 
         //Construtor com argumento
-        public Fechamento(int id, Tipo tipo, Operador operador, DateTime data, string empresa, double valor, double taxa, double despesa, int fluxo, string banco, SaleStatus status)
+        public Fechamento(int id, /*Tipo tipo,*/ /*Operador operador,*/ DateTime data, string empresa, double valor, double taxa, double despesa, int fluxo, string banco, SaleStatus status)
         {
             Id = id;
-            Tipo = tipo;
-            Operador = operador;
+            //Tipo = tipo;
+            //Operador = operador;
             Data = data;
             Empresa = empresa;
             Valor = valor;

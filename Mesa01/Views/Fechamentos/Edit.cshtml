@@ -1,4 +1,4 @@
-﻿@model Mesa01.Models.Fechamento
+﻿@model Mesa01.Models.ViewModels.FechamentoFormViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,52 +11,52 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Fechamento.Id" />
             <div class="form-group">
-                <label asp-for="Tipo" class="control-label"></label>
-                <input asp-for="Tipo" class="form-control" />
-                <span asp-validation-for="Tipo" class="text-danger"></span>
+                <label asp-for="Fechamento.TipoId" class="control-label"></label>
+                <select asp-for="Fechamento.TipoId" asp-items="@(new SelectList(Model.Tipos,"Id","Nome"))" class="form-control"></select>
+                <span asp-validation-for="Fechamento.TipoId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Operador" class="control-label"></label>
-                <input asp-for="Operador" class="form-control" />
-                <span asp-validation-for="Operador" class="text-danger"></span>
+                <label asp-for="Fechamento.Operador" class="control-label"></label>
+                <select asp-for="Fechamento.OperadorId" asp-items="@(new SelectList(Model.Operadores,"Id","Nome"))" class ="form-control"></select>
+                <span asp-validation-for="Fechamento.OperadorId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Data" class="control-label"></label>
-                <input asp-for="Data" class="form-control" />
-                <span asp-validation-for="Data" class="text-danger"></span>
+                <label asp-for="Fechamento.Data" class="control-label"></label>
+                <input asp-for="Fechamento.Data" class="form-control" />
+                <span asp-validation-for="Fechamento.Data" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Empresa" class="control-label"></label>
-                <input asp-for="Empresa" class="form-control" />
-                <span asp-validation-for="Empresa" class="text-danger"></span>
+                <label asp-for="Fechamento.Empresa" class="control-label"></label>
+                <input asp-for="Fechamento.Empresa" class="form-control" />
+                <span asp-validation-for="Fechamento.Empresa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" />
-                <span asp-validation-for="Valor" class="text-danger"></span>
+                <label asp-for="Fechamento.Valor" class="control-label"></label>
+                <input asp-for="Fechamento.Valor" class="form-control" />
+                <span asp-validation-for="Fechamento.Valor" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Taxa" class="control-label"></label>
-                <input asp-for="Taxa" class="form-control" />
-                <span asp-validation-for="Taxa" class="text-danger"></span>
+                <label asp-for="Fechamento.Taxa" class="control-label"></label>
+                <input asp-for="Fechamento.Taxa" class="form-control" />
+                <span asp-validation-for="Fechamento.Taxa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Despesa" class="control-label"></label>
-                <input asp-for="Despesa" class="form-control" />
-                <span asp-validation-for="Despesa" class="text-danger"></span>
+                <label asp-for="Fechamento.Despesa" class="control-label"></label>
+                <input asp-for="Fechamento.Despesa" class="form-control" />
+                <span asp-validation-for="Fechamento.Despesa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fluxo" class="control-label"></label>
-                <input asp-for="Fluxo" class="form-control" />
-                <span asp-validation-for="Fluxo" class="text-danger"></span>
+                <label asp-for="Fechamento.Fluxo" class="control-label"></label>
+                <input asp-for="Fechamento.Fluxo" class="form-control" />
+                <span asp-validation-for="Fechamento.Fluxo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Banco" class="control-label"></label>
-                <input asp-for="Banco" class="form-control" />
-                <span asp-validation-for="Banco" class="text-danger"></span>
+                <label asp-for="Fechamento.Banco" class="control-label"></label>
+                <input asp-for="Fechamento.Banco" class="form-control" />
+                <span asp-validation-for="Fechamento.Banco" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
